@@ -11,6 +11,7 @@
 #define BLUE 0, 0, 255, 255
 
 #define FRAME_DELAY 1000 / 60
+#define NUM_BOIDS 100
 
 // Boid
 typedef struct {
@@ -107,6 +108,12 @@ int main(int argc, char **argv) {
 		// store initial time
 		int start_time = SDL_GetTicks();
 
+		boid_t *boids[NUM_BOIDS];
+		
+		for(int i=0; i<NUM_BOIDS; i++) {
+				boids[i] = create_boid_dynamic(rand() % WIDTH, rand() % HEIGHT, (rand() % 10) -5, (rand() % 10) -5, (rand() % 10) -5, (rand() % 10) -5);
+		}
+
 		while(running) {
 				while(SDL_PollEvent(&event)) {
 						if(event.type == SDL_QUIT) {
@@ -131,8 +138,14 @@ int main(int argc, char **argv) {
 
 				double dt = dt_ms / 1000.0f;
 
-				draw_boid(boid, renderer);
-				update_boid(boid, dt);
+				// draw_boid(boid, renderer);
+				// update_boid(boid, dt);
+				//
+				// draw the boids
+				for(int i=0; i<NUM_BOIDS; i++) {
+						draw_boid(boids[i], renderer);
+						update_boid(boids[i], dt);
+				}
 
 				SDL_RenderPresent(renderer);
 				SDL_Delay(FRAME_DELAY);
